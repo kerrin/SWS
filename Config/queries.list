@@ -1,0 +1,41 @@
+#-----------------------------------------------------------------------------
+# Config: queries.list
+#-----------------------------------------------------------------------------
+# Description:
+# 					Contains the select statements used by the core code
+#					Queries can contain variable replacement, all tables should
+#					be variables, as should anything that is not to be quoted
+#-----------------------------------------------------------------------------
+# CVS Details
+# -----------
+# $Author: kerrin $
+# $Date: 2003/09/27 14:32:47 $
+# $Revision: 1.6 $
+#-----------------------------------------------------------------------------
+
+# Check the log on details of a user
+# Should return 1 row on successful log on, and 0 on failure
+[check_member]
+	SELECT 	ID
+	FROM		#member
+	WHERE		username = ? AND password = ENCRYPT(?,'SW') AND state_ID IN (1,2)
+[end]
+
+[get_member_details]
+	SELECT 	ID,username,firstname,surname,screen_name,dob,gender_ID,
+            registered, last_logon, paid_expire, expire
+	FROM		#member
+	WHERE		ID = ?
+[end]
+
+[get_inactive_member]
+	SELECT 	ID
+	FROM		#member
+	WHERE		ID = ? AND state_ID = ?
+[end]
+
+[check_test]
+	SELECT	ID,test_number,test_string,test_date
+	FROM		#test
+	WHERE		ID = ?
+[end]

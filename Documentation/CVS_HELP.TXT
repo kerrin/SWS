@@ -1,0 +1,111 @@
+# CVS History Information:
+# ~~~~~~~~~~~~~~~~~~~~~~~~
+# $Author: kerrin $  $Date: 2003/07/17 14:03:17 $  $Revision: 1.1 $
+
+CVS tips
+--------
+
+Here are some working practice tips for CVS:
+
+1. It is recommended that before you start work, and when you finish you do a:
+
+      # cvs update
+
+   in the root of your installation of the CVS project. This makes sure that:
+
+      a) You always have the latest working copy
+      b) Any changes not checked in are highlighted to you as plain as day
+
+   Do NOT get into the habit of ignoring the output from CVS! You should ALWAYS
+   take note of everything it outputs, ignore at your peril! (And with the
+   looming threat that if you mess something up, it will hold everyone up). 
+	Just in case you are not clear:
+
+      U --> means that the file has been updated. This means someone else
+            has made changes, and the change has been updated into your
+            working copy
+
+      P --> Similar to U; the file has been updated due to someone else making
+            changes, however, you have ALSO made changes, so the two copies of
+            the same file were merged without incident
+
+      A --> A whole new file was added by someone else and its been added to
+            your working copy
+
+      R --> Someone has removed a file and it has been removed from your
+            working copy accordingly
+
+      C --> ARGHHHH! BE CAREFUL! CVS has taken a file, merged it because that
+            file has changed, BUT THERE IS A CONFLICT! Please note:
+
+               **** IT IS NOW YOUR RESPONSIBILITY TO FIX IT ****
+
+            I'm sorry, but its first come first served. Whoever checked in the
+            version that now conflicts with you has the right to have the file
+            in CVS, and you have to fix the conflict with your code.
+
+      ? --> You naughty developer, you've forgotten to CVS ADD this file to the
+            repository. If you have temporary files, then put them SOMEWHERE
+            ELSE! Don't use your working copy as a dumping ground for backups
+            and tittle tattle.
+
+      M --> Possibly naughty. You have a file that you have changed, however,
+            you haven't commited it yet. Although not recommended, you can hold
+            fire till the logical block of code is complete. In general, you
+            should NOT be trying to spread a logical block of code overnight,
+            since you will lose the thread of what you're doing.
+
+2. Do the following from the root once a logical block of work is complete,
+   COMPILES (<-- THAT IS IMPORTANT) and WORKS FOR THE MOST PART. The last bit
+   means DON'T check in non-working code that is common between everyone! If
+   you are experimenting in a leaf-node of the application, or with a new
+   module, you can check stuff in, otherwise DON'T!
+
+      # cvs commit
+
+   Let me re-emphasise, DO NOT CHECK IN NON-COMPILING CODE! 
+	This will hold everyone up.
+
+3. With regard to point (1), if you want to reduce the '?' outputs you get from
+   a cvs update, you can do the following:
+
+      (bash/bsh/ksh)
+      # export CVSIGNORE="*.log *.swp Config"
+
+      (csh/tcsh)
+      # setenv CVSIGNORE "*.log *.swp Config"
+
+4. To reduce confusion and to make sure that directories are correctly pruned
+   and correctly updated, put the following in a file "~/.cvsrc":
+
+      # vi ~/.cvsrc
+      cvs -z9
+      checkout -P
+      update -d -P
+
+5. Finally, don't forget that the update process is probably a two stage
+   process, since you have both SWS application code and SWS configuration
+   in one directory.
+
+      # cvs update
+      # cd Config
+      # cvs update
+      # cd ..
+
+6. If you are about to make quite a large internal change to a project, but
+   other developers around you need to still work on the existing core of the
+   SWS application, then don't go impacting your work colleagues by:
+
+      a) Going ahead and breaking APIs and everything around them
+      b) Try to solve by not doing a CVS commit until you're finished with
+         the big internal change
+
+   Ask to have a branch created! Then you can work in your own little sandbox
+   till you're done, checking in code every time a logical block is finished,
+   AND you can still merge your colleagues changes into your working copy in
+   the morning and evening!
+
+   Once the branch has finished, don't forget to do a final cvs update to make
+   sure all code is up-to-date and stop everyone from doing commits until the
+   branch is re-merged. DO NOT PERFORM A MERGE IF THE CODE IS NON-WORKING!!!
+   (It goes without saying, your code does compile of-course).
